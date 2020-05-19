@@ -60,15 +60,14 @@ function FastImageBase(_ref) {
       forwardedRef = _ref.forwardedRef,
       props = _objectWithoutPropertiesLoose(_ref, ["source", "tintColor", "onLoadStart", "onProgress", "onLoad", "onError", "onLoadEnd", "style", "fallback", "children", "resizeMode", "forwardedRef"]);
 
-  var resolvedSource = reactNative.Image.resolveAssetSource(source);
-
+  // const resolvedSource = Image.resolveAssetSource(source as any)
   if (fallback || reactNative.Platform.OS === 'web') {
     return React__default.createElement(reactNative.View, {
       style: [styles.imageContainer, style],
       ref: forwardedRef
     }, React__default.createElement(reactNative.Image, Object.assign({}, props, {
       style: reactNative.StyleSheet.absoluteFill,
-      source: resolvedSource,
+      source: source,
       onLoadStart: onLoadStart,
       onProgress: onProgress,
       onLoad: onLoad,
@@ -84,7 +83,7 @@ function FastImageBase(_ref) {
   }, React__default.createElement(FastImageView, Object.assign({}, props, {
     tintColor: tintColor,
     style: reactNative.StyleSheet.absoluteFill,
-    source: resolvedSource,
+    source: reactNative.Image.resolveAssetSource(source),
     onFastImageLoadStart: onLoadStart,
     onFastImageProgress: onProgress,
     onFastImageLoad: onLoad,

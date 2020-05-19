@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { Platform, NativeModules, Image, View, StyleSheet, requireNativeComponent } from 'react-native';
+import { Platform, NativeModules, View, Image, StyleSheet, requireNativeComponent } from 'react-native';
 
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
@@ -53,15 +53,14 @@ function FastImageBase(_ref) {
       forwardedRef = _ref.forwardedRef,
       props = _objectWithoutPropertiesLoose(_ref, ["source", "tintColor", "onLoadStart", "onProgress", "onLoad", "onError", "onLoadEnd", "style", "fallback", "children", "resizeMode", "forwardedRef"]);
 
-  var resolvedSource = Image.resolveAssetSource(source);
-
+  // const resolvedSource = Image.resolveAssetSource(source as any)
   if (fallback || Platform.OS === 'web') {
     return React.createElement(View, {
       style: [styles.imageContainer, style],
       ref: forwardedRef
     }, React.createElement(Image, Object.assign({}, props, {
       style: StyleSheet.absoluteFill,
-      source: resolvedSource,
+      source: source,
       onLoadStart: onLoadStart,
       onProgress: onProgress,
       onLoad: onLoad,
@@ -77,7 +76,7 @@ function FastImageBase(_ref) {
   }, React.createElement(FastImageView, Object.assign({}, props, {
     tintColor: tintColor,
     style: StyleSheet.absoluteFill,
-    source: resolvedSource,
+    source: Image.resolveAssetSource(source),
     onFastImageLoadStart: onLoadStart,
     onFastImageProgress: onProgress,
     onFastImageLoad: onLoad,

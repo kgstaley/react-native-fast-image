@@ -143,7 +143,7 @@ function FastImageBase({
     forwardedRef,
     ...props
 }: FastImageProps & { forwardedRef: React.Ref<any> }) {
-    const resolvedSource = Image.resolveAssetSource(source as any)
+    // const resolvedSource = Image.resolveAssetSource(source as any)
 
     if (fallback || Platform.OS === 'web') {
         return (
@@ -151,7 +151,7 @@ function FastImageBase({
                 <Image
                     {...props}
                     style={StyleSheet.absoluteFill}
-                    source={resolvedSource}
+                    source={source as any}
                     onLoadStart={onLoadStart}
                     onProgress={onProgress}
                     onLoad={onLoad as any}
@@ -170,7 +170,7 @@ function FastImageBase({
                 {...props}
                 tintColor={tintColor}
                 style={StyleSheet.absoluteFill}
-                source={resolvedSource}
+                source={Image.resolveAssetSource(source as any)}
                 onFastImageLoadStart={onLoadStart}
                 onFastImageProgress={onProgress}
                 onFastImageLoad={onLoad}
