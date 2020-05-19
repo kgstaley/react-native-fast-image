@@ -1,15 +1,16 @@
 import React, { forwardRef, memo } from 'react'
 import {
-    View,
-    Image,
-    NativeModules,
-    requireNativeComponent,
-    StyleSheet,
     FlexStyle,
+    Image,
     LayoutChangeEvent,
+    NativeModules,
+    Platform,
+    requireNativeComponent,
     ShadowStyleIOS,
     StyleProp,
+    StyleSheet,
     TransformsStyle,
+    View,
 } from 'react-native'
 
 const FastImageViewNativeModule = NativeModules.FastImageView
@@ -144,7 +145,7 @@ function FastImageBase({
 }: FastImageProps & { forwardedRef: React.Ref<any> }) {
     const resolvedSource = Image.resolveAssetSource(source as any)
 
-    if (fallback) {
+    if (fallback || Platform.OS === 'web') {
         return (
             <View style={[styles.imageContainer, style]} ref={forwardedRef}>
                 <Image
@@ -208,8 +209,11 @@ FastImage.cacheControl = cacheControl
 
 FastImage.priority = priority
 
-FastImage.preload = (sources: Source[]) =>
-    FastImageViewNativeModule.preload(sources)
+FastImage.preload = (sources: Source[]) => {
+    if (Platform.OS !== 'web') {
+        FastImageViewNativeModule.preload(sources)
+    }
+}
 
 const styles = StyleSheet.create({
     imageContainer: {
@@ -217,19 +221,25 @@ const styles = StyleSheet.create({
     },
 })
 
-// Types of requireNativeComponent are not correct.
-const FastImageView = (requireNativeComponent as any)(
-    'FastImageView',
-    FastImage,
-    {
-        nativeOnly: {
-            onFastImageLoadStart: true,
-            onFastImageProgress: true,
-            onFastImageLoad: true,
-            onFastImageError: true,
-            onFastImageLoadEnd: true,
+let FastImageView: any
+
+if (Platform.OS === 'web') {
+    FastImageView = Image
+} else {
+    // Types of requireNativeComponent are not correct.
+    FastImageView = (requireNativeComponent as any)(
+        'FastImageView',
+        FastImage,
+        {
+            nativeOnly: {
+                onFastImageLoadStart: true,
+                onFastImageProgress: true,
+                onFastImageLoad: true,
+                onFastImageError: true,
+                onFastImageLoadEnd: true,
+            },
         },
-    },
-)
+    )
+}
 
 export default FastImage
